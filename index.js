@@ -19,12 +19,12 @@ var base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 var the_interval = TIME_INTERVAL_UPDATE * 60 * 1000;
 setInterval(function() {
   var today = new Date().getHours();
-  updateAirtable();
+  updateCurrenciesAirtable();
+  updatePerformanceAirtable();
 }, the_interval);
 
 // Fetch the rates from the Open Exchange API
 function getPrice(currencyName, baseCurrency, callback) {
-
     request({
       uri: "https://min-api.cryptocompare.com/data/price?fsym="+currencyName+"&tsyms="+baseCurrency,
       method: "GET",
@@ -72,7 +72,7 @@ function updatePerfomance(fundValue) {
 }
 
 // Update Airtable with rates from Open Exchange
-function updateAirtable() {
+function updateCurrenciesAirtable() {
 
     base('Currencies').select({
       // Selecting the first 3 records in Main View:
@@ -99,7 +99,11 @@ function updateAirtable() {
       }
     });
 
-    base('Transactions').select({
+}
+
+function updatePerformanceAirtable(){
+
+  base('Transactions').select({
       // Selecting the first 3 records in Main View:
       view: 'Crypto'
     }).eachPage(function page(records, fetchNextPage) {
@@ -133,15 +137,13 @@ function updateAirtable() {
 
 }
 
-
-
-
 server.listen(PORT, function(error) {
 
     if (error) {
       console.error(error);
     } else {
-      updateAirtable();  
+      updateCurrenciesAirtable();
+      updatePerformanceAirtable();
       console.info("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
     }
 
