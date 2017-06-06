@@ -25,19 +25,18 @@ function getPrice(currencyName, baseCurrency, callback) {
         
       var jsonObject = JSON.parse(body);
       callback(jsonObject[baseCurrency]);
-
     });
 }
 
 // Helper function for updating airtable rates
-function updatePrice(newRate, id) {
+function updatePrice(newRate, timeStamp, id) {
     base('Currencies').update(id, {
-      'Price': newRate
+      'Price': newRate,
+      'Last updated': timeStamp
     }, function(err, record) {
       if (err) { console.log(err); return; }
       console.log(record);
     });
-
 }
 
 // Update Airtable with rates from Open Exchange
@@ -55,8 +54,10 @@ function updateCurrenciesAirtable() {
         // Get the name
         var name = record.get('Symbol');
 
+        var timeStamp = new Date(); 
+
         getPrice(name, BASE_CURRENCY, function(rate){
-          updatePrice(rate, id);
+          updatePrice(rate, timeStamp.toISOString(), id);
         });
         
       });
@@ -75,7 +76,8 @@ server.listen(PORT, function(error) {
       console.error(error);
     } else {
       // Run the fetch rates every 4 hours
-      schedule.scheduleJob('0 */4 * * *', function(){
+      updateCurrenciesAirtable();
+      schedule.scheduleJob('* */4 * * *', function(){
         updateCurrenciesAirtable();
         console.log("UPDATING AMOUNTS");
       });
