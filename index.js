@@ -77,7 +77,7 @@ server.listen(PORT, function(error) {
     } else {
       // Run the fetch rates every 4 hours
       updateCurrenciesAirtable();
-      schedule.scheduleJob('*/5 * * * *', function(){
+      schedule.scheduleJob('*/15 * * * *', function(){
         updateCurrenciesAirtable();
         console.log("UPDATING AMOUNTS");
       });
