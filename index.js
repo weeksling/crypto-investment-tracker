@@ -15,6 +15,12 @@ const BASE_CURRENCY         = 'USD';
 // Set up airtable
 var base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 
+// Run the fetch rates every 10 minutes
+setInterval(function() {
+  updateCurrenciesAirtable();
+  console.log("UPDATING AMOUNTS");
+}, 600000);
+
 // Fetch the rates from the Open Exchange API
 function getPrice(currencyName, baseCurrency, callback) {
     request({
@@ -76,12 +82,6 @@ server.listen(PORT, function(error) {
       console.error(error);
     } else {
       updateCurrenciesAirtable();
-
-      // Run the fetch rates every 10 minutes
-      setInterval(function() {
-        updateCurrenciesAirtable();
-        console.log("UPDATING AMOUNTS");
-      }, 600000);
       console.info("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
     }
 
