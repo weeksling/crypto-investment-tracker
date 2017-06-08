@@ -75,13 +75,16 @@ server.listen(PORT, function(error) {
     if (error) {
       console.error(error);
     } else {
-      // Run the fetch rates every 4 hours
       updateCurrenciesAirtable();
-      schedule.scheduleJob('*/15 * * * *', function(){
+
+      // Run the fetch rates every 10 minutes
+      setInterval(function() {
         updateCurrenciesAirtable();
         console.log("UPDATING AMOUNTS");
-      });
+      }, 600000);
       console.info("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
     }
 
 });
+
+
