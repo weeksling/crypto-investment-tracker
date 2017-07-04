@@ -18,7 +18,7 @@ var base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 // Run the fetch rates every 5 minutes
 setInterval(function() {
   updateCurrenciesAirtable();
-}, 300000);
+}, 600000);
 
 // Fetch the rates from the Open Exchange API
 function getPrice(currencyName, baseCurrency, callback) {
