@@ -15,17 +15,22 @@ const BASE_CURRENCY         = 'USD';
 // Set up airtable
 var base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 
+// Ping the site every five minutes to keep it from idling.
+setInterval(function() {
+    http.get("http://cryptofund-tracker.herokuapp.com");
+}, 300000); // every 5 minutes (300000)
+
 // Run the fetch rates every 5 minutes
 setInterval(function() {
   updateCurrenciesAirtable();
-}, 600000);
+}, 300000);
 
 // Fetch the rates from the Open Exchange API
 function getPrice(currencyName, baseCurrency, callback) {
     request({
       uri: "https://min-api.cryptocompare.com/data/price?fsym="+currencyName+"&tsyms="+baseCurrency,
       method: "GET",
-      timeout: 5000,
+      timeout: 10000,
     }, function(error, resp, body) {
         
       var jsonObject = JSON.parse(body);
