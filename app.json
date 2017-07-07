@@ -1,0 +1,25 @@
+{
+  "name": "Cryptocurrency Investment Tracker",
+  "description": "Automatically track your cryptocurrency investments using Airtable.",
+  "logo": "",
+  "repository": "",
+  "keywords": ["node", "crypto"],
+  "env": {
+    "APP_NAME": {
+      "description": "Your heroku app name (**this**.herokuapp.com)",
+      "required": true
+    },
+    "AIRTABLE_API_KEY": {
+      "description": "Your Airtable API Key (find it on https://airtable.com/api)",
+      "required": true
+    },
+    "AIRTABLE_BASE_ID": {
+      "description": "Your Airtable Base ID",
+      "required": true
+    },
+    "BASE_CURRENCY": {
+      "description": "Your base fiat currency",
+      "required": true
+    },
+  }
+}

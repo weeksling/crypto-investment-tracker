@@ -5,27 +5,22 @@ var app = express();
 var request = require('request');
 var PORT = process.env.PORT || 8080;
 var http = require('http');
-var schedule = require('node-schedule');
 var server = http.createServer(app);
 
 const AIRTABLE_API_KEY      = process.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID      = process.env.AIRTABLE_BASE_ID;
-const BASE_CURRENCY         = 'USD';
+const BASE_CURRENCY         = process.env.BASE_CURRENCY;
+const APP_NAME              = process.env.APP_NAME;
 
-// Set up airtable
+// Set up airtable API
 var base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 
 // Ping the site every five minutes to keep it from idling.
 setInterval(function() {
-    http.get("http://cryptofund-tracker.herokuapp.com");
-}, 300000); // every 5 minutes (300000)
+    http.get("http://"+APP_NAME+".herokuapp.com");
+}, 300000); 
 
-// Run the fetch rates every 5 minutes
-setInterval(function() {
-  updateCurrenciesAirtable();
-}, 300000);
-
-// Fetch the rates from the Open Exchange API
+// Fetch the rates from CryptoCompare
 function getPrice(currencyName, baseCurrency, callback) {
     request({
       uri: "https://min-api.cryptocompare.com/data/price?fsym="+currencyName+"&tsyms="+baseCurrency,
@@ -59,8 +54,10 @@ function updateCurrenciesAirtable() {
 
       // Loop through each record and update the currency
       records.forEach(function updateRecords(record) {
+
         // Get the ID
         var id = record['_rawJson']['id'];
+        
         // Get the name
         var name = record.get('Symbol');
 
@@ -79,6 +76,11 @@ function updateCurrenciesAirtable() {
       }
     });
 }
+
+// Fetch rates every 10 minutes
+setInterval(function() {
+  updateCurrenciesAirtable();
+}, 600000);
 
 server.listen(PORT, function(error) {
 
