@@ -46,7 +46,7 @@ function updatePrice(newRate, timeStamp, id) {
 
 // Update Airtable with rates from Open Exchange
 function updateCurrenciesAirtable() {
-
+    console.info('Updating Air Table')
     base('Currencies').select({
       // Selecting the first 3 records in Main View:
       view: 'All Currencies'
@@ -77,18 +77,19 @@ function updateCurrenciesAirtable() {
     });
 }
 
+console.info('Setting up our interval...')
 // Fetch rates every 10 minutes
 setInterval(function() {
   updateCurrenciesAirtable();
 }, 600000);
 
 server.listen(PORT, function(error) {
-
+  console.log('Starting server')
     if (error) {
       console.error(error);
     } else {
       updateCurrenciesAirtable();
-      console.info("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
+      console.log("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
     }
 
 });
