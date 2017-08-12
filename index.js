@@ -39,7 +39,7 @@ function updatePrice(newRate, timeStamp, id) {
       'Price': newRate,
       'Last updated': timeStamp
     }, function(err, record) {
-      if (err) { console.log(err); return; }
+      if (err) { console.error('Error updating price', err); return; }
       console.log(record);
     });
 }
@@ -72,7 +72,7 @@ function updateCurrenciesAirtable() {
       fetchNextPage();
     }, function done(error) {
       if (error) {
-          console.log(error);
+          console.log('Error while looping through Pages', error);
       }
     });
 }
@@ -84,9 +84,9 @@ setInterval(function() {
 }, 600000);
 
 server.listen(PORT, function(error) {
-  console.log('Starting server')
+  console.info('Starting server')
     if (error) {
-      console.error(error);
+      console.error('Error whil starting server', error);
     } else {
       updateCurrenciesAirtable();
       console.log("==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
